@@ -3,6 +3,7 @@ from os import uname
 
 
 def do_write():
+	board = uname()[0]
 
 	if uname()[0] == 'WiPy' or board == 'LoPy' or board == 'FiPy':
 		rdr = mfrc522.MFRC522("GP14", "GP16", "GP15", "GP22", "GP17")

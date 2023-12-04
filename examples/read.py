@@ -1,8 +1,13 @@
 import mfrc522
 from os import uname
+from time import sleep
+from machine import Pin
 
 
 def do_read():
+	board = uname()[0]
+
+	builtin_led =  Pin(25, Pin.OUT)
 
 	if uname()[0] == 'WiPy' or board == 'LoPy' or board == 'FiPy':
 		rdr = mfrc522.MFRC522("GP14", "GP16", "GP15", "GP22", "GP17")
@@ -19,7 +24,6 @@ def do_read():
 
 	try:
 		while True:
-
 			(stat, tag_type) = rdr.request(rdr.REQIDL)
 
 			if stat == rdr.OK:
@@ -31,6 +35,9 @@ def do_read():
 					print("  - tag type: 0x%02x" % tag_type)
 					print("  - uid	 : 0x%02x%02x%02x%02x" % (raw_uid[0], raw_uid[1], raw_uid[2], raw_uid[3]))
 					print("")
+					builtin_led.on()
+					sleep(1)
+					builtin_led.off()
 
 					if rdr.select_tag(raw_uid) == rdr.OK:
 
@@ -46,3 +53,5 @@ def do_read():
 
 	except KeyboardInterrupt:
 		print("Bye")
+
+do_read()
